@@ -221,7 +221,7 @@ async def start(client, message):
     f_caption = CAPTION.format(
         file_name = files['file_name'],
         file_size = get_size(files['file_size']),
-        file_caption=files['caption']
+        file_caption=files.get('caption', '')
     )
     if IS_STREAM:
         btn = [[
