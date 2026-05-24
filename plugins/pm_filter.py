@@ -190,7 +190,10 @@ async def next_page(bot, query):
 
 @Client.on_callback_query(filters.regex(r"^languages"))
 async def languages_(client: Client, query: CallbackQuery):
-    _, key, req, offset = query.data.split("#")
+    data = query.data.split("#")
+    if len(data) != 4:
+    return  # ignore invalid callback safely
+    _, key, req, offset = data
     if int(req) != query.from_user.id:
         return await query.answer(f"Hello {query.from_user.first_name},\nDon't Click Other Results!", show_alert=True)
     all_files = ALL_FILES.get(key)
