@@ -1151,7 +1151,30 @@ async def advantage_spell_chok(message, s):
             pass
         return
     if not movies:
-        n = await s.edit_text(text=script.NOT_FILE_TXT.format(message.from_user.mention, search), reply_markup=InlineKeyboardMarkup(btn))
+        try:
+            if not s:
+                return
+
+            text = script.NOT_FILE_TXT.format(
+                message.from_user.mention,
+                search
+            )
+
+            markup = InlineKeyboardMarkup(btn) if btn else None
+
+            n = await s.edit_text(
+                text=text,
+                reply_markup=markup
+            )
+
+        except Exception as e:
+            print(f"[PM EDIT ERROR] {e}")
+
+            # fallback so bot doesn't crash
+            await message.reply_text(
+                text,
+                reply_markup=markup
+            )
         await temp.BOT.send_message(LOG_CHANNEL, f"#No_Result\n\nRequester: {message.from_user.mention}\nContent: {search}")
         await asyncio.sleep(60)
         await n.delete()
