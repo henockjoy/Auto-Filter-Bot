@@ -672,8 +672,8 @@ webapp_template = """
         <a href="https://t.me/TeamYoonseri" class="footer-link" target="_blank">Support</a>
         <a href="https://www.themoviedb.org" class="footer-link" target="_blank">TMDB</a>
     </div>
-    <div class="footer-copy">&copy; <span id="footerYear"></span> HA Bots. All rights reserved.</div>
-    <div class="footer-powered">Powered by <a href="https://t.me/HA_Bots" target="_blank">HA Bots</a></div>
+    <div class="footer-copy">&copy; <span id="footerYear"></span> Filmotainment. All rights reserved.</div>
+    <div class="footer-powered">Powered by <a href="https://t.me/FT_Channels" target="_blank">Filmotainment</a></div>
     <div class="footer-tmdb">This product uses the TMDB API but is not endorsed or certified by TMDB.</div>
 </footer>
 
