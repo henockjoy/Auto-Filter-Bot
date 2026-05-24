@@ -25,11 +25,8 @@ class script(object):
 👥 Total Chats: <code>{}</code>
 🗳 Data database used: <code>{}</code>
 
-🗂 1st database Files: <code>{}</code>
-🗳 1st files database used: <code>{}</code>
-
-🗂 2nd database Files: <code>{}</code>
-🗳 2nd files database used: <code>{}</code>
+🗂 database Files: <code>{}</code>
+🗳 files database used: <code>{}</code>
 
 🚀 Bot Uptime: <code>{}</code>"""
 
