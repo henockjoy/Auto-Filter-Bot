@@ -375,11 +375,18 @@ async def settings(client, message):
     if message.chat.type in [enums.ChatType.GROUP, enums.ChatType.SUPERGROUP]:
         if not await is_check_admin(client, group_id, message.from_user.id):
             return await message.reply_text('You not admin in this group.')
-        btn = [[
-            InlineKeyboardButton("Open Here", callback_data='open_group_settings')
-        ],[
-            InlineKeyboardButton("Open In PM", callback_data='open_pm_settings')
-        ]]
+        group_id = message.chat.id
+
+        if not await is_check_admin(client, group_id, message.from_user.id):
+            return await message.reply_text("You are not admin in this group.")
+
+        btn = await get_grp_stg(group_id)
+
+        await message.reply_text(
+            f"⚙ Settings for <b>{message.chat.title}</b>",
+            reply_markup=InlineKeyboardMarkup(btn)
+        )
+        return
         await message.reply_text('Where do you want to open the settings menu?', reply_markup=InlineKeyboardMarkup(btn))
     elif message.chat.type == enums.ChatType.PRIVATE:
         cons = await db.get_connections(message.from_user.id)
