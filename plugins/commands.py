@@ -337,15 +337,8 @@ async def stats(bot, message):
     used_files_db_size = get_size(await db.get_files_db_size())
     used_data_db_size = get_size(await db.get_data_db_size())
 
-    if SECOND_FILES_DATABASE_URL:
-        secnd_files_db_used_size = get_size(await db.get_second_files_db_size())
-        secnd_files = await second_db_count_documents()
-    else:
-        secnd_files_db_used_size = '-'
-        secnd_files = '-'
-
     uptime = get_readable_time(time_now() - temp.START_TIME)
-    await message.reply_text(script.STATUS_TXT.format(users, prm, chats, used_data_db_size, files, used_files_db_size, secnd_files, secnd_files_db_used_size, uptime))    
+    await message.reply_text(script.STATUS_TXT.format(users, prm, chats, used_data_db_size, files, used_files_db_size, uptime))    
     
 
 
