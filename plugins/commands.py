@@ -345,6 +345,10 @@ async def stats(bot, message):
 async def get_grp_stg(group_id):
     settings = await get_settings(group_id)
     btn = [[
+        InlineKeyboardButton(f"Auto Filter {'✅' if settings.get('AUTO_FILTER') else '❌'}",callback_data=f'bool_setgs#AUTO_FILTER#{settings.get("AUTO_FILTER", False)}#{group_id}')
+    ],[
+        InlineKeyboardButton(f"PM Search {'✅' if settings.get('PM_SEARCH') else '❌'}",callback_data=f'bool_setgs#PM_SEARCH#{settings.get("PM_SEARCH", False)}#{group_id}')
+    ],[
         InlineKeyboardButton('Edit IMDb template', callback_data=f'imdb_setgs#{group_id}')
     ],[
         InlineKeyboardButton('Edit Shortlink', callback_data=f'shortlink_setgs#{group_id}')
