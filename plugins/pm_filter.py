@@ -190,7 +190,10 @@ async def next_page(bot, query):
 
 @Client.on_callback_query(filters.regex(r"^languages"))
 async def languages_(client: Client, query: CallbackQuery):
-    data = query.data.split("#")
+    parts = query.data.split("#")
+    key = parts[1] if len(parts) > 1 else None
+    req = parts[2] if len(parts) > 2 else None
+    offset = parts[3] if len(parts) > 3 else 0
     if len(data) != 4:
     return  # ignore invalid callback safely
     _, key, req, offset = data
