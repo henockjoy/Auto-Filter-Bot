@@ -138,5 +138,5 @@ Support: @{}"""
     NEW_ADDED_TEMPLATE = """<b>✅{title} {year}</b>
 <code>⏱ {runtime} Min | ⭐ {rating}</code>
 
-<blockquote><b>🎙 {language}</b></blockquote>
+<blockquote><b>🎙 {languages}</b></blockquote>
 📽 Genre:</b> {genres}"""
