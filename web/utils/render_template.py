@@ -564,7 +564,7 @@ webapp_template = """
 
 <!-- NAVBAR -->
 <nav class="navbar" id="navbar">
-    <div class="nav-logo">HA Bots - Entertainment</div>
+    <div class="nav-logo">Filmotainment</div>
     <div class="nav-right">
         <button class="nav-search-toggle" id="searchToggle" onclick="openSearch()" title="Search">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -664,7 +664,7 @@ webapp_template = """
 
 <!-- PREMIUM FOOTER -->
 <footer class="site-footer">
-    <div class="footer-logo">HA Bots - Entertainment</div>
+    <div class="footer-logo">Filmotainment</div>
     <div class="footer-tagline">Your premium media discovery platform</div>
     <div class="footer-divider"></div>
     <div class="footer-links">
@@ -672,7 +672,7 @@ webapp_template = """
         <a href="https://t.me/TeamYoonseri" class="footer-link" target="_blank">Support</a>
         <a href="https://www.themoviedb.org" class="footer-link" target="_blank">TMDB</a>
     </div>
-    <div class="footer-copy">&copy; <span id="footerYear"></span> Filmotainment. All rights reserved.</div>
+    <div class="footer-copy">&copy; <span id="footerYear"></span>Filmotainment. All rights reserved.</div>
     <div class="footer-powered">Powered by <a href="https://t.me/FT_Channels" target="_blank">Filmotainment</a></div>
     <div class="footer-tmdb">This product uses the TMDB API but is not endorsed or certified by TMDB.</div>
 </footer>
@@ -1361,7 +1361,7 @@ watch_tmplt = """<!DOCTYPE html>
 <body>
 
 <header>
-    <span class="header-logo">HA Bots</span>
+    <span class="header-logo">Filmotainment</span>
     <div id="file-name">{file_name}</div>
 </header>
 
@@ -1423,7 +1423,7 @@ watch_tmplt = """<!DOCTYPE html>
 </div>
 
 <footer>
-    <p>Powered by <a href="https://t.me/HA_Bots" class="ha-link" target="_blank" rel="noopener">HA Bots</a></p>
+    <p>Powered by <a href="https://t.me/FT_Channels" class="ha-link" target="_blank" rel="noopener">Filmotainment</a></p>
 </footer>
 
 <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
@@ -1486,7 +1486,7 @@ error_tmplt = """<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Error — HA Bots</title>
+    <title>Error — Filmotainment</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
     <style>
@@ -1622,7 +1622,7 @@ error_tmplt = """<!DOCTYPE html>
 <body>
 
 <header>
-    <span class="header-logo">HA Bots</span>
+    <span class="header-logo">Filmotainment</span>
 </header>
 
 <main>
@@ -1655,7 +1655,7 @@ error_tmplt = """<!DOCTYPE html>
 </main>
 
 <footer>
-  <p>Powered by <a href="https://t.me/HA_Bots" class="ha-link" target="_blank" rel="noopener">HA Bots</a></p>
+  <p>Powered by <a href="https://t.me/FT_Channels" class="ha-link" target="_blank" rel="noopener">Filmotainment</a></p>
 </footer>
 </body>
 </html>
