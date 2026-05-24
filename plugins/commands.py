@@ -68,13 +68,29 @@ async def start(client, message):
             InlineKeyboardButton('📺 Popular TV Shows 📺', url="https://www.themoviedb.org/tv")
         ]]
         reply_markup = InlineKeyboardMarkup(buttons)
-        await message.reply_photo(
-            photo=random.choice(PICS),
-            caption=script.START_TXT.format(message.from_user.mention, get_wish()),
-            reply_markup=reply_markup,
-            parse_mode=enums.ParseMode.HTML,
-            effect_id=int(random.choice(EFFECT_IDS))
-        )
+        try:
+            await message.reply_photo(
+                photo=random.choice(PICS),
+                caption=script.START_TXT.format(
+                    message.from_user.mention,
+                    get_wish()
+                ),
+                reply_markup=reply_markup,
+                parse_mode=enums.ParseMode.HTML,
+                effect_id=int(random.choice(EFFECT_IDS))
+            )
+
+        except Exception as e:
+            print("PHOTO ERROR:", e)
+
+            await message.reply_text(
+                script.START_TXT.format(
+                    message.from_user.mention,
+                    get_wish()
+                ),
+                reply_markup=reply_markup,
+                parse_mode=enums.ParseMode.HTML
+            )
         return
 
     mc = message.command[1]
