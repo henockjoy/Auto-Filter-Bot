@@ -39,7 +39,7 @@ BOT_ID = BOT_TOKEN.split(":")[0]
 PORT = int(environ.get('PORT', '8080'))
 
 # Upload your images to "postimages.org" and get direct link
-PICS = (environ.get('PICS', 'https://i.postimg.cc/V6NDy9b9/04b015f6eafd3a49e6957b9c41f2c37b.jpg https://i.postimg.cc/TwPC8jWN/117f415875b35318a250ddf801c319b8.jpg https://i.postimg.cc/43PBF2nW/2cf5878cdd39b917f2f0400571213384.jpg https://i.postimg.cc/tTg20dVf/3e9353dae6ef6e01ecf8f6b54f51bd97.jpg https://i.postimg.cc/1tzJx0NM/59fb0d8c8a45e4832401c16189b1b319.jpg https://i.postimg.cc/d104MRTj/648129a9d72a7ac3e4af8cc6f2bae8ca.jpg https://i.postimg.cc/j5jZV6JM/a525581952c934d4abc23f295612383a.jpg https://i.postimg.cc/SsKD0Lz6/b22e06d7bdbe5513b8ce7e8560296bea.jpg https://i.postimg.cc/d104MRT4/b26eec9264bfa13d7baf430302315bac.jpg https://i.postimg.cc/bvg3FVdF/d82f7cc65a240386616d1e401c0b20fd.jpg https://i.postimg.cc/tTg20dV8/edfb9f53f30a80514651c4310255b7b7.jpg ')).split()
+PICS = (environ.get('PICS', 'https://i.postimg.cc/V6NDy9b9/04b015f6eafd3a49e6957b9c41f2c37b.jpg https://i.postimg.cc/TwPC8jWN/117f415875b35318a250ddf801c319b8.jpg https://i.postimg.cc/43PBF2nW/2cf5878cdd39b917f2f0400571213384.jpg https://i.postimg.cc/tTg20dVf/3e9353dae6ef6e01ecf8f6b54f51bd97.jpg https://i.postimg.cc/1tzJx0NM/59fb0d8c8a45e4832401c16189b1b319.jpg https://i.postimg.cc/d104MRTj/648129a9d72a7ac3e4af8cc6f2bae8ca.jpg https://i.postimg.cc/j5jZV6JM/a525581952c934d4abc23f295612383a.jpg https://i.postimg.cc/SsKD0Lz6/b22e06d7bdbe5513b8ce7e8560296bea.jpg https://i.postimg.cc/d104MRT4/b26eec9264bfa13d7baf430302315bac.jpg https://i.postimg.cc/bvg3FVdF/d82f7cc65a240386616d1e401c0b20fd.jpg https://i.postimg.cc/tTg20dV8/edfb9f53f30a80514651c4310255b7b7.jpg')).split()
 
 # Bot Admins
 ADMINS = environ.get('ADMINS', '1824857814')
