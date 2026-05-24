@@ -6,7 +6,7 @@ from pyrogram.file_id import FileId
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo import TEXT, ASCENDING
 from pymongo.errors import DuplicateKeyError, OperationFailure
-from info import USE_CAPTION_FILTER, FILES_DATABASE_URL, SECOND_FILES_DATABASE_URL, DATABASE_NAME, COLLECTION_NAME, MAX_BTN, DATA_DATABASE_URL
+from info import USE_CAPTION_FILTER, FILES_DATABASE_URL, DATABASE_NAME, COLLECTION_NAME, MAX_BTN, DATA_DATABASE_URL
 import PTN, asyncio
 from database.users_chats_db import data_db
 from utils import send_update
@@ -16,15 +16,6 @@ logger = logging.getLogger(__name__)
 client = AsyncIOMotorClient(FILES_DATABASE_URL)
 db = client[DATABASE_NAME]
 collection = db[COLLECTION_NAME]
-
-second_client = None
-second_db = None
-second_collection = None
-
-if SECOND_FILES_DATABASE_URL:
-    second_client = AsyncIOMotorClient(SECOND_FILES_DATABASE_URL)
-    second_db = second_client[DATABASE_NAME]
-    second_collection = second_db[COLLECTION_NAME]
 
 updates_collection = data_db['notified_media']
 
@@ -67,26 +58,6 @@ async def setup_database():
         else:
             logger.exception(e)
             exit() 
-
-    if SECOND_FILES_DATABASE_URL and second_collection is not None:
-        try:
-            await second_collection.create_index([("file_name", TEXT), ("caption", TEXT)], name="file_name_caption_text")
-            logger.info("SECOND_FILES_DATABASE_URL indexes created/verified.")
-        except OperationFailure as e:
-            if e.code == 85:
-                logger.warning("SECOND_FILES_DATABASE_URL index conflict detected. Dropping old text indexes and recreating...")
-                await second_collection.drop_indexes()
-                await second_collection.create_index([("file_name", TEXT), ("caption", TEXT)], name="file_name_caption_text")
-                logger.info("SECOND_FILES_DATABASE_URL indexes recreated successfully.")
-            else:
-                logger.exception(e)
-                exit()
-
-
-async def second_db_count_documents():
-    if second_collection is None:
-        return 0
-    return await second_collection.count_documents({})
 
 async def db_count_documents():
     return await collection.count_documents({})
@@ -134,20 +105,8 @@ async def save_file(media):
         return 'dup'
         
     except OperationFailure:
-        if SECOND_FILES_DATABASE_URL and second_collection is not None:
-            try:
-                await second_collection.insert_one(document)
-                logger.info(f'Saved to 2nd db - {file_name}')
-                
-                await trigger_update_if_new(title, year)
-                return 'suc'
-                
-            except DuplicateKeyError:
-                logger.warning(f'Already Saved in 2nd db - {file_name}')
-                return 'dup'
-        else:
-            logger.error('Your FILES_DATABASE_URL is full, add SECOND_FILES_DATABASE_URL')
-            return 'err'
+        logger.error('FILES_DATABASE_URL is full')
+        return 'err'
 
 
 async def get_search_results(query):
@@ -159,12 +118,6 @@ async def get_search_results(query):
         cursor1 = collection.find({}).sort("_id", -1).limit(recent_limit)
         docs1 = await cursor1.to_list(length=recent_limit)
         results.extend(docs1)
-
-        if SECOND_FILES_DATABASE_URL and second_collection is not None and len(results) < recent_limit:
-            remaining_limit = recent_limit - len(results)
-            cursor2 = second_collection.find({}).sort("_id", -1).limit(remaining_limit)
-            docs2 = await cursor2.to_list(length=remaining_limit)
-            results.extend(docs2)
 
         return results
 
@@ -184,11 +137,6 @@ async def get_search_results(query):
     cursor1 = collection.find(search_filter)
     docs1 = await cursor1.to_list(length=None) 
     results.extend(docs1)
-
-    if SECOND_FILES_DATABASE_URL and second_collection is not None:
-        cursor2 = second_collection.find(search_filter)
-        docs2 = await cursor2.to_list(length=None)
-        results.extend(docs2)
 
     return results
 
@@ -212,18 +160,11 @@ async def delete_files(query):
     result1 = await collection.delete_many(filter_query)
     total_deleted = result1.deleted_count
     
-    if SECOND_FILES_DATABASE_URL and second_collection is not None:
-        result2 = await second_collection.delete_many(filter_query)
-        total_deleted += result2.deleted_count
-    
     return total_deleted
 
 
 async def get_file_details(query):
-    file_details = await collection.find_one({'_id': query})
-    if not file_details and SECOND_FILES_DATABASE_URL and second_collection is not None:
-        file_details = await second_collection.find_one({'_id': query})
-    return file_details
+    return await collection.find_one({'_id': query})
 
 
 def encode_file_id(s: bytes) -> str:
