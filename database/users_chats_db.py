@@ -1,5 +1,5 @@
 from motor.motor_asyncio import AsyncIOMotorClient
-from info import BOT_ID, ADMINS, DATABASE_NAME, DATA_DATABASE_URL, FILES_DATABASE_URL, SECOND_FILES_DATABASE_URL, IMDB_TEMPLATE, WELCOME_TEXT, LINK_MODE, TUTORIAL, SHORTLINK_URL, SHORTLINK_API, SHORTLINK, FILE_CAPTION, IMDB, WELCOME, SPELL_CHECK, PROTECT_CONTENT, AUTO_DELETE, IS_STREAM, VERIFY_EXPIRE
+from info import BOT_ID, ADMINS, DATABASE_NAME, DATA_DATABASE_URL, FILES_DATABASE_URL, IMDB_TEMPLATE, WELCOME_TEXT, LINK_MODE, TUTORIAL, SHORTLINK_URL, SHORTLINK_API, SHORTLINK, FILE_CAPTION, IMDB, WELCOME, SPELL_CHECK, PROTECT_CONTENT, AUTO_DELETE, IS_STREAM, VERIFY_EXPIRE
 from datetime import datetime, timedelta
 
 files_db_client = AsyncIOMotorClient(FILES_DATABASE_URL)
@@ -7,11 +7,6 @@ files_db = files_db_client[DATABASE_NAME]
 
 data_db_client = AsyncIOMotorClient(DATA_DATABASE_URL)
 data_db = data_db_client[DATABASE_NAME]
-
-second_files_db = None
-if SECOND_FILES_DATABASE_URL:
-    second_files_db_client = AsyncIOMotorClient(SECOND_FILES_DATABASE_URL)
-    second_files_db = second_files_db_client[DATABASE_NAME]
 
 class Database:
     default_setgs = {
@@ -188,12 +183,6 @@ class Database:
     async def get_files_db_size(self):
         stats = await files_db.command("dbstats")
         return stats['dataSize']
-   
-    async def get_second_files_db_size(self):
-        if second_files_db is not None:
-            stats = await second_files_db.command("dbstats")
-            return stats['dataSize']
-        return 0
     
     async def get_data_db_size(self):
         stats = await data_db.command("dbstats")
