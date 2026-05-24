@@ -25,7 +25,7 @@ from aiohttp import web
 from typing import Union, Optional, AsyncGenerator
 
 from web import web_app
-from info import URL, INDEX_CHANNELS, SUPPORT_GROUP, LOG_CHANNEL, API_ID, DATA_DATABASE_URL, API_HASH, BOT_TOKEN, PORT, BIN_CHANNEL, ADMINS, SECOND_FILES_DATABASE_URL, FILES_DATABASE_URL
+from info import URL, INDEX_CHANNELS, SUPPORT_GROUP, LOG_CHANNEL, API_ID, DATA_DATABASE_URL, API_HASH, BOT_TOKEN, PORT, BIN_CHANNEL, ADMINS, FILES_DATABASE_URL
 from utils import temp, get_readable_time, check_premium
 from database.users_chats_db import db
 from database.ia_filterdb import setup_database
