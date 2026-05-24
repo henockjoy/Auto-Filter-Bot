@@ -5,18 +5,20 @@
 
 class script(object):
 
-    START_TXT = """<emoji id='5210956306952758910'>👋</emoji> <b>ʜᴇʏ {}, <i>{}</i>
+    START_TXT = """<emoji id='5210956306952758910'>👋</emoji> <b>안녕하세요 {}, <i>{}</i>
     
-ɪ ᴀᴍ ᴘᴏᴡᴇʀғᴜʟ ᴀᴜᴛᴏ ғɪʟᴛᴇʀ ᴡɪᴛʜ ʟɪɴᴋ sʜᴏʀᴛᴇɴᴇʀ ʙᴏᴛ. ʏᴏᴜ ᴄᴀɴ ᴜꜱᴇ ᴀꜱ ᴀᴜᴛᴏ ғɪʟᴛᴇʀ ᴡɪᴛʜ ʟɪɴᴋ sʜᴏʀᴛᴇɴᴇʀ ɪɴ ʏᴏᴜʀ ɢʀᴏᴜᴘ... ɪᴛ'ꜱ ᴇᴀꜱʏ ᴛᴏ ᴜꜱᴇ ᴊᴜsᴛ ᴀᴅᴅ ᴍᴇ ᴀꜱ ᴀᴅᴍɪɴ ɪɴ ʏᴏᴜʀ ɢʀᴏᴜᴘ ɪ ᴡɪʟʟ ᴘʀᴏᴠɪᴅᴇ ᴛʜᴇʀᴇ ᴍᴏᴠɪᴇꜱ ᴡɪᴛʜ ʏᴏᴜʀ ʟɪɴᴋ ꜱʜᴏʀᴛᴇɴᴇʀ... ♻️</b>"""
+ʏᴏᴜʀ sᴍᴀʀᴛ ᴀssɪsᴛᴀɴᴛ 🎬
+🔎 ᴊᴜsᴛ sᴇɴᴅ ᴍᴇ ᴀ ᴍᴏᴠɪᴇ/sᴇʀɪᴇs ɴᴀᴍᴇ & ɪ’ʟʟ ғᴇᴛᴄʜ ɪᴛ ғᴏʀ ʏᴏᴜ — ғᴀsᴛ & ᴀᴄᴄᴜʀᴀᴛᴇ ⚡
+📌 sɪᴛ ʙᴀᴄᴋ & ᴇɴᴊᴏʏ, ɪ’ʟʟ ʜᴀɴᴅʟᴇ ᴛʜᴇ sᴇᴀʀᴄʜɪɴɢ! 💫 ♻️</b>"""
 
-    MY_ABOUT_TXT = """★ Server: <a href=https://www.heroku.com>Heroku</a>
+    MY_ABOUT_TXT = """★ Server: <a href=https://app.koyeb.com/>Koyeb</a>
 ★ Database: <a href=https://www.mongodb.com>MongoDB</a>
 ★ Language: <a href=https://www.python.org>Python</a>
 ★ Library: <a href=https://kurigram.icu/>Kurigram</a>"""
 
-    MY_OWNER_TXT = """★ Name: HA Bots
-★ Username: @HA_Bots
-★ Country: Sri Lanka 🇱🇰"""
+    MY_OWNER_TXT = """★ Name: FT Admin
+★ Username: @FTAdminbot
+★ Country: India"""
 
     STATUS_TXT = """👤 Total Users: <code>{}</code>
 😎 Premium Users: <code>{}</code>
@@ -49,19 +51,19 @@ I can't find the <b>{}</b> in my database! 🥲
 👉 Please read the Instructions to get better results.
 👉 Or not been released yet."""
     
-    IMDB_TEMPLATE = """✅ I Found: <code>{query}</code>
+    IMDB_TEMPLATE = """<u><b>{title}</b></u>
+    
+‣ 𝖸𝖾𝖺𝗋: {year} 
+‣ 𝖦𝖾𝗇𝗋𝖾: {genres}
+‣ 𝖱𝖺𝗍𝗂𝗇𝗀: {rating} / 10
+‣ 𝖱𝗎𝗇𝖳𝗂𝗆𝖾: {runtime} Minutes
+‣ 𝖱𝖾𝗊𝗎𝖾𝗌𝗍𝖾𝖽 𝖡𝗒: {message.from_user.mention}
 
-🏷 Title: <a href={url}>{title}</a>
-🎭 Genres: {genres}
-📆 Year: {year}
-🌟 Rating: {rating} / 10
-☀️ Languages: {languages}
-📀 RunTime: {runtime} Minutes
+‣ 𝖯𝗅𝗈𝗍: {plot}‌"""
 
-🗣 Requested by: {message.from_user.mention}
-©️ Powered by: <b>{message.chat.title}</b>"""
-
-    FILE_CAPTION = """<i>{file_name}</i>
+    FILE_CAPTION = """<blockquote><b>{file_name}</b>
+    
+<code>{file_caption}</code></blockquote>
 
 🚫 ᴘʟᴇᴀsᴇ ᴄʟɪᴄᴋ ᴏɴ ᴛʜᴇ ᴄʟᴏsᴇ ʙᴜᴛᴛᴏɴ ɪꜰ ʏᴏᴜ ʜᴀᴠᴇ sᴇᴇɴ ᴛʜᴇ ᴍᴏᴠɪᴇ 🚫"""
 
@@ -136,11 +138,8 @@ Support: @{}"""
 - ᴅᴇᴠʟᴏᴘᴇʀ - @HA_Bots"""
 
 
-    NEW_ADDED_TEMPLATE = """✅ New Added ✅
+    NEW_ADDED_TEMPLATE = """<b>✅{title} {year}</b>
+<code>⏱ {runtime} Min | ⭐ {rating}</code>
 
-🏷 Title: <a href={url}>{title}</a>
-🎭 Genres: {genres}
-📆 Year: {year}
-🌟 Rating: {rating} / 10
-☀️ Languages: {languages}
-📀 RunTime: {runtime} Minutes"""
+<blockquote><b>🎙 {language}</b></blockquote>
+📽 Genre:</b> {genres}"""
