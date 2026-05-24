@@ -60,7 +60,7 @@ I can't find the <b>{}</b> in my database! 🥲
 
     FILE_CAPTION = """<blockquote><b>{file_name}</b>
     
-<code>{file_caption}</code></blockquote>
+<code>{caption}</code></blockquote>
 
 🚫 ᴘʟᴇᴀsᴇ ᴄʟɪᴄᴋ ᴏɴ ᴛʜᴇ ᴄʟᴏsᴇ ʙᴜᴛᴛᴏɴ ɪꜰ ʏᴏᴜ ʜᴀᴠᴇ sᴇᴇɴ ᴛʜᴇ ᴍᴏᴠɪᴇ 🚫"""
 
