@@ -668,8 +668,8 @@ webapp_template = """
     <div class="footer-tagline">Your premium media discovery platform</div>
     <div class="footer-divider"></div>
     <div class="footer-links">
-        <a href="https://t.me/HA_Bots" class="footer-link" target="_blank">Telegram Channel</a>
-        <a href="https://t.me/HA_Bots_Support" class="footer-link" target="_blank">Support</a>
+        <a href="https://t.me/FT_Channels" class="footer-link" target="_blank">Telegram Channel</a>
+        <a href="https://t.me/TeamYoonseri" class="footer-link" target="_blank">Support</a>
         <a href="https://www.themoviedb.org" class="footer-link" target="_blank">TMDB</a>
     </div>
     <div class="footer-copy">&copy; <span id="footerYear"></span> HA Bots. All rights reserved.</div>
