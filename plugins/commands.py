@@ -401,7 +401,8 @@ async def settings(client, message):
 async def connect(client, message):
     if message.chat.type in [enums.ChatType.GROUP, enums.ChatType.SUPERGROUP]:
         group_id = message.chat.id
-        await db.add_connect(group_id, message.from_user.id)
+        if message.from_user:
+            await db.add_connect(group_id, message.from_user.id)
         await message.reply_text('Successfully connected this group to PM, now you can manage your group using /settings inside your PM')
     elif message.chat.type == enums.ChatType.PRIVATE:
         if len(message.command) > 1:
