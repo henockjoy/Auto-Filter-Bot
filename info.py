@@ -83,8 +83,8 @@ FILES_DATABASE_URL = environ.get('FILES_DATABASE_URL', "")
 if len(FILES_DATABASE_URL) == 0:
     logger.error('FILES_DATABASE_URL is missing, exiting now')
     exit()
-DATABASE_NAME = environ.get('DATABASE_NAME', "unix")
-COLLECTION_NAME = environ.get('COLLECTION_NAME', 'yoonbot')
+DATABASE_NAME = environ.get('DATABASE_NAME', "yoonbot")
+COLLECTION_NAME = environ.get('COLLECTION_NAME', 'Cluster0')
 
 # Links
 SUPPORT_LINK = environ.get('SUPPORT_LINK', 'https://t.me/TeamYoonseri')
