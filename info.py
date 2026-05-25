@@ -131,7 +131,7 @@ if len(BIN_CHANNEL) == 0:
     exit()
 else:
     BIN_CHANNEL = int(BIN_CHANNEL)
-URL = environ.get("URL", "https://yoonseri.netlify.app/")
+URL = environ.get("URL", "https://web-production-81c4b.up.railway.app/")
 if len(URL) == 0:
     logger.error('URL is missing, exiting now')
     exit()
