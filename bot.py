@@ -26,9 +26,41 @@ from typing import Union, Optional, AsyncGenerator
 
 from web import web_app
 from info import URL, INDEX_CHANNELS, SUPPORT_GROUP, LOG_CHANNEL, API_ID, DATA_DATABASE_URL, API_HASH, BOT_TOKEN, PORT, BIN_CHANNEL, ADMINS, FILES_DATABASE_URL
-from utils import temp, get_readable_time, check_premium
 from database.users_chats_db import db
-from database.ia_filterdb import setup_database
+from database.ia_filterdb import setup_database, Media
+from utils import temp, get_readable_time, check_premium, normalize_title
+
+import asyncio
+from database.ia_filterdb import Media
+from utils import normalize_title
+
+async def migrate():
+
+    print("Starting migration...")
+
+    async for file in Media.collection.find({}):
+
+        file_name = file.get("file_name", "")
+
+        parsed = normalize_title(file_name)
+
+        await Media.collection.update_one(
+            {"_id": file["_id"]},
+            {
+                "$set": {
+                    "normalized_name": parsed["normalized_name"],
+                    "season": parsed["season"],
+                    "episode": parsed["episode"]
+                }
+            }
+        )
+
+        print(f"Updated: {file_name}")
+
+    print("Migration completed")
+
+asyncio.run(migrate())
+
 
 if ul:
     uvloop.install()
