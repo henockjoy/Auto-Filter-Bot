@@ -10,3 +10,4 @@ yt-dlp
 httpx
 motor
 parse-torrent-title
+rapidfuzz
