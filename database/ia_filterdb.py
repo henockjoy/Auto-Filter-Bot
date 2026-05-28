@@ -7,7 +7,7 @@ from pyrogram.file_id import FileId
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo import TEXT, ASCENDING
 from pymongo.errors import DuplicateKeyError, OperationFailure
-from info import USE_CAPTION_FILTER, FILES_DATABASE_URL, DATABASE_NAME, COLLECTION_NAME, MAX_BTN, DATA_DATABASE_URL
+from info import USE_CAPTION_FILTER, FILES_DATABASE_URL, DATABASE_NAME, COLLECTION_NAME, DATA_DATABASE_URL
 import PTN, asyncio
 from database.users_chats_db import data_db
 from utils import send_update
@@ -44,6 +44,9 @@ async def setup_database():
 
     try:
         await collection.create_index([("file_name", TEXT), ("caption", TEXT)], name="file_name_caption_text")
+        await collection.create_index("normalized_name")
+        await collection.create_index("season")
+        await collection.create_index("episode")
         logger.info("FILES_DATABASE_URL indexes created/verified.")
     except OperationFailure as e:
         if e.code == 85:  # IndexOptionsConflict
@@ -152,13 +155,6 @@ async def get_search_results(query):
         )
 
         if score >= 55:
-            files.append(file)
-
-    return files
-
-    async for file in cursor:
-
-        if fuzzy_match(query, file.get("file_name", "")):
             files.append(file)
 
     return files
