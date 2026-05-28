@@ -30,36 +30,6 @@ from database.users_chats_db import db
 from database.ia_filterdb import setup_database
 from utils import temp, get_readable_time, check_premium, normalize_title
 
-import asyncio
-from utils import normalize_title
-
-async def migrate():
-
-    print("Starting migration...")
-
-    async for file in Media.collection.find({}):
-
-        file_name = file.get("file_name", "")
-
-        parsed = normalize_title(file_name)
-
-        await Media.collection.update_one(
-            {"_id": file["_id"]},
-            {
-                "$set": {
-                    "normalized_name": parsed["normalized_name"],
-                    "season": parsed["season"],
-                    "episode": parsed["episode"]
-                }
-            }
-        )
-
-        print(f"Updated: {file_name}")
-
-    print("Migration completed")
-
-asyncio.run(migrate())
-
 
 if ul:
     uvloop.install()
