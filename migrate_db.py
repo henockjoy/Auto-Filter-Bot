@@ -1,31 +1,30 @@
-from pymongo import MongoClient
+import asyncio
+from database.ia_filterdb import collection
 from utils import normalize_title
 
-MONGO_URI = "YOUR_MONGO_URI"
+async def migrate():
 
-client = MongoClient(MONGO_URI)
+    print("Starting migration...")
 
-db = client["your_database"]
-collection = db["your_collection"]
+    async for file in collection.find({}):
 
-cursor = collection.find({})
+        file_name = file.get("file_name", "")
 
-for file in cursor:
+        parsed = normalize_title(file_name)
 
-    file_name = file.get("file_name", "")
-
-    parsed = normalize_title(file_name)
-
-    collection.update_one(
-        {"_id": file["_id"]},
-        {
-            "$set": {
-                "normalized_name": parsed["normalized_name"],
-                "season": parsed["season"],
-                "episode": parsed["episode"]
+        await collection.update_one(
+            {"_id": file["_id"]},
+            {
+                "$set": {
+                    "normalized_name": parsed["normalized_name"],
+                    "season": parsed["season"],
+                    "episode": parsed["episode"]
+                }
             }
-        }
-    )
+        )
 
-print("Migration completed")
+        print(f"Updated: {file_name}")
 
+    print("Migration completed")
+
+asyncio.run(migrate())
