@@ -31,7 +31,6 @@ from database.ia_filterdb import setup_database
 from utils import temp, get_readable_time, check_premium, normalize_title
 
 import asyncio
-from database.ia_filterdb import Media
 from utils import normalize_title
 
 async def migrate():
