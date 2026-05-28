@@ -128,5 +128,34 @@ class Bot(Client):
                 yield message
                 current += 1
 
-app = Bot()
-app.run()
+#app = Bot()
+#app.run()
+
+async def migrate():
+
+    print("Starting migration...")
+
+    async for file in collection.find({}):
+
+        file_name = file.get("file_name", "")
+
+        parsed = normalize_title(file_name)
+
+        await collection.update_one(
+            {"_id": file["_id"]},
+            {
+                "$set": {
+                    "normalized_name": parsed["normalized_name"],
+                    "season": parsed["season"],
+                    "episode": parsed["episode"]
+                }
+            }
+        )
+
+        print(f"Updated: {file_name}")
+
+    print("Migration completed")
+
+
+if __name__ == "__main__":
+    asyncio.run(migrate())
