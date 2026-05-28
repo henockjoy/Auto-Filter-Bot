@@ -27,7 +27,7 @@ from typing import Union, Optional, AsyncGenerator
 from web import web_app
 from info import URL, INDEX_CHANNELS, SUPPORT_GROUP, LOG_CHANNEL, API_ID, DATA_DATABASE_URL, API_HASH, BOT_TOKEN, PORT, BIN_CHANNEL, ADMINS, FILES_DATABASE_URL
 from database.users_chats_db import db
-from database.ia_filterdb import setup_database, Media
+from database.ia_filterdb import setup_database
 from utils import temp, get_readable_time, check_premium, normalize_title
 
 import asyncio
