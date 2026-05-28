@@ -122,16 +122,20 @@ async def get_search_results(query):
     query = str(query).strip()
 
     if not query:
-        cursor = collection.find({}).sort("_id", -1).limit(100)
-        return await cursor.to_list(length=100)
+        cursor = collection.find({}).sort("_id", -1)
+        return await cursor.to_list(length=None)
 
     parsed = normalize_title(query)
 
     normalized_query = parsed["normalized_name"]
 
+    query_words = normalized_query.split()
+
+    regex_pattern = ".*".join(query_words)
+
     db_query = {
         "normalized_name": {
-            "$regex": normalized_query,
+            "$regex": regex_pattern,
             "$options": "i"
         }
     }
@@ -139,6 +143,18 @@ async def get_search_results(query):
     cursor = collection.find(db_query)
 
     files = []
+
+    async for file in cursor:
+
+        score = fuzzy_match(
+            normalized_query,
+            file.get("normalized_name", "")
+        )
+
+        if score >= 55:
+            files.append(file)
+
+    return files
 
     async for file in cursor:
 
