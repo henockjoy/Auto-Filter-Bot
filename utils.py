@@ -434,12 +434,29 @@ async def get_seconds(time_string):
         return 0
 
 REMOVE_WORDS = [
-    "480p", "720p", "1080p", "2160p",
-    "webrip", "web dl", "web-dl", "bluray",
-    "x264", "x265", "hevc", "h264",
-    "aac", "ddp", "ddp2", "amzn",
-    "nf", "hdrip", "web", "dl",
-    "mkv", "mp4", "hdr", "dv"
+
+    "480p",
+    "720p",
+    "1080p",
+    "2160p",
+    "4k",
+    "hdr",
+    "webrip",
+    "webdl",
+    "web-dl",
+    "bluray",
+    "x264",
+    "x265",
+    "hevc",
+    "aac",
+    "ddp",
+    "amzn",
+    "nf",
+    "ds4k",
+    "multi",
+    "dual audio",
+    "hq",
+
 ]
 
 def normalize_title(text: str):
