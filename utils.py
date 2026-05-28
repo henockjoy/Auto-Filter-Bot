@@ -9,6 +9,7 @@ from database.users_chats_db import db
 from shortzy import Shortzy
 import requests, pytz
 from Script import script
+from rapidfuzz import fuzz
 
 
 class temp(object):
@@ -431,3 +432,63 @@ async def get_seconds(time_string):
         return value * 86400 * 365
     else:
         return 0
+
+REMOVE_WORDS = [
+    "480p", "720p", "1080p", "2160p",
+    "webrip", "web dl", "web-dl", "bluray",
+    "x264", "x265", "hevc", "h264",
+    "aac", "ddp", "ddp2", "amzn",
+    "nf", "hdrip", "web", "dl",
+    "mkv", "mp4", "hdr", "dv"
+]
+
+def normalize_title(text: str):
+
+    text = text.lower()
+
+    season = None
+    episode = None
+
+    # Extract S01E06
+    se_match = re.search(r"s(\d+)e(\d+)", text, re.I)
+
+    if se_match:
+        season = int(se_match.group(1))
+        episode = int(se_match.group(2))
+
+    # Remove season/episode text
+    text = re.sub(r"s\d+e\d+", "", text, flags=re.I)
+
+    # Replace separators
+    text = re.sub(r"[-_.]", " ", text)
+
+    # Remove brackets
+    text = re.sub(r"\[.*?\]|\(.*?\)", "", text)
+
+    # Remove junk words
+    for word in REMOVE_WORDS:
+        text = text.replace(word, "")
+
+    # Remove special chars
+    text = re.sub(r"[^a-z0-9 ]", "", text)
+
+    # Remove extra spaces
+    text = re.sub(r"\s+", " ", text).strip()
+
+    return {
+        "normalized_name": text,
+        "season": season,
+        "episode": episode
+    }
+
+
+def fuzzy_match(tmdb_title, filename):
+
+    t1 = normalize_title(tmdb_title)["normalized_name"]
+    t2 = normalize_title(filename)["normalized_name"]
+
+    score = fuzz.token_set_ratio(t1, t2)
+
+    return score >= 85
+
+
