@@ -482,13 +482,11 @@ def normalize_title(text: str):
     }
 
 
-def fuzzy_match(tmdb_title, filename):
+def fuzzy_match(query, text):
 
-    t1 = normalize_title(tmdb_title)["normalized_name"]
-    t2 = normalize_title(filename)["normalized_name"]
-
-    score = fuzz.token_set_ratio(t1, t2)
-
-    return score >= 85
+    return fuzz.partial_ratio(
+        query.lower(),
+        text.lower()
+    )
 
 
