@@ -1,6 +1,7 @@
 import logging
 from struct import pack
 import re
+from utils import normalize_title, fuzzy_match
 import base64
 from pyrogram.file_id import FileId
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -82,12 +83,20 @@ async def save_file(media):
     file_name = re.sub(r"@\w+|(_|\-|\.|\+)", " ", str(media.file_name))
     file_caption = re.sub(r"@\w+|(_|\-|\.|\+)", " ", str(media.caption))
     
+    parsed = normalize_title(file_name)
+
     document = {
         '_id': file_id,
         'file_name': file_name,
         'file_size': media.file_size,
-        'caption': file_caption
+        'caption': file_caption,
+
+        # NEW SEARCH FIELDS
+        'normalized_name': parsed["normalized_name"],
+        'season': parsed["season"],
+        'episode': parsed["episode"]
     }
+
     
     data = PTN.parse(file_name)
     title = data.get('title')
@@ -108,37 +117,35 @@ async def save_file(media):
         logger.error('FILES_DATABASE_URL is full')
         return 'err'
 
-
 async def get_search_results(query):
+
     query = str(query).strip()
+
     if not query:
-        recent_limit = 100  # default limit for fetching recently added files
-        results = []
-        
-        cursor1 = collection.find({}).sort("_id", -1).limit(recent_limit)
-        docs1 = await cursor1.to_list(length=recent_limit)
-        results.extend(docs1)
+        cursor = collection.find({}).sort("_id", -1).limit(100)
+        return await cursor.to_list(length=100)
 
-        return results
+    parsed = normalize_title(query)
 
-    if ' ' not in query:
-        raw_pattern = r'(\b|[\.\+\-_])' + query + r'(\b|[\.\+\-_])'
-    else:
-        raw_pattern = query.replace(' ', r'.*[\s\.\+\-_]')
+    normalized_query = parsed["normalized_name"]
 
-    db_query = {"$regex": raw_pattern, "$options": "i"}
-    search_filter = {"$or": [{"file_name": db_query}]}
-    
-    if USE_CAPTION_FILTER:
-        search_filter["$or"].append({"caption": db_query})
+    db_query = {
+        "normalized_name": {
+            "$regex": normalized_query,
+            "$options": "i"
+        }
+    }
 
-    results = []
-    
-    cursor1 = collection.find(search_filter)
-    docs1 = await cursor1.to_list(length=None) 
-    results.extend(docs1)
+    cursor = collection.find(db_query)
 
-    return results
+    files = []
+
+    async for file in cursor:
+
+        if fuzzy_match(query, file.get("file_name", "")):
+            files.append(file)
+
+    return files
 
 
 async def delete_files(query):
