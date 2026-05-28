@@ -143,6 +143,12 @@ async def get_search_results(query):
         }
     }
 
+    if parsed["season"] is not None:
+        db_query["season"] = parsed["season"]
+
+    if parsed["episode"] is not None:
+        db_query["episode"] = parsed["episode"]
+
     cursor = collection.find(db_query)
 
     files = []
