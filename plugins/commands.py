@@ -16,20 +16,25 @@ from info import PREMIUM_PLANS, EFFECT_IDS, OWNER_USERNAME, IS_PREMIUM, URL, BIN
 from utils import get_plan_name, get_poster, is_premium, upload_image, get_settings, get_size, is_subscribed, is_check_admin, get_shortlink, get_verify_status, update_verify_status, save_group_settings, temp, get_readable_time, get_wish, get_seconds
 import PTN
 
-async def safe_send_cached_media(client, **kwargs):
-    while True:
-        try:
-            return await client.send_cached_media(**kwargs)
+async def safe_send_cached_media(client, chat_id, **kwargs):
+    try:
+        return await client.send_cached_media(
+            chat_id=chat_id,
+            **kwargs
+        )
 
-        except FloodWait as e:
-            logging.warning(
-                f"FloodWait detected. Sleeping for {e.value} seconds."
-            )
+    except FloodWait as e:
+        logging.warning(
+            f"FloodWait detected. Sleeping for {e.value} seconds."
+        )
 
-            await asyncio.sleep(e.value)
+        await client.send_message(
+            chat_id,
+            f"⚠️ Telegram rate limit reached.\n"
+            f"Please try again in {e.value // 60} minutes."
+        )
 
-        except Exception:
-            raise
+        return None
 
 
 @Client.on_message(filters.command("start") & filters.incoming)
