@@ -442,6 +442,29 @@ webapp_template = """
             text-align: center; padding: 40px 20px; color: var(--text3);
             font-size: 14px;
         }
+        .season-scroll{
+            display:flex;
+            overflow-x:auto;
+            gap:10px;
+            padding-bottom:10px;
+            margin-bottom:15px;
+            scrollbar-width:none;
+        }
+
+        .season-scroll::-webkit-scrollbar{
+            display:none;
+        }
+
+        .season-btn{
+            flex:0 0 auto;
+            border:none;
+            border-radius:12px;
+            padding:10px 16px;
+            cursor:pointer;
+            background:#222;
+            color:#fff;
+            white-space:nowrap;
+        }
         .modal-empty {
             text-align: center; padding: 40px 20px;
         }
@@ -1014,24 +1037,124 @@ async function loadFilesForItem(item) {
             return;
         }
         filesEl.innerHTML = '';
-        data.files.forEach(file => {
-            const el = document.createElement('div');
-            el.className = 'file-item';
-            el.innerHTML = `
-                <div class="file-icon">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-                </div>
-                <div class="file-item-info">
-                    <div class="file-item-name">${file.name}</div>
-                    <div class="file-item-size">${file.size}</div>
-                </div>
-                <div class="file-item-get">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-                </div>
-            `;
-            el.onclick = () => getFile(file.id);
-            filesEl.appendChild(el);
-        });
+
+        // TV Series Mode
+        if (item.type === 'tv') {
+
+            const grouped = {};
+
+            data.files.forEach(file => {
+                const season = file.season || 1;
+
+                if (!grouped[season]) {
+                    grouped[season] = [];
+                }
+
+                grouped[season].push(file);
+            });
+
+            const seasonBar = document.createElement('div');
+            seasonBar.className = 'season-scroll';
+
+            filesEl.appendChild(seasonBar);
+
+            const episodeContainer = document.createElement('div');
+            filesEl.appendChild(episodeContainer);
+
+            const renderSeason = (seasonNo) => {
+
+                episodeContainer.innerHTML = '';
+
+                grouped[seasonNo]
+                    .sort((a, b) => (a.episode || 0) - (b.episode || 0))
+                    .forEach(file => {
+
+                        const el = document.createElement('div');
+
+                        el.className = 'file-item';
+
+                        el.innerHTML = `
+                            <div class="file-icon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round">
+                                    <polygon points="23 7 16 12 23 17 23 7"/>
+                                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                                </svg>
+                            </div>
+
+                            <div class="file-item-info">
+                                <div class="file-item-name">
+                                    Episode ${file.episode || '?'}
+                                </div>
+                                <div class="file-item-size">
+                                    ${file.size}
+                                </div>
+                            </div>
+
+                            <div class="file-item-get">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                                    <path d="M5 12h14"/>
+                                    <path d="M12 5l7 7-7 7"/>
+                                </svg>
+                            </div>
+                        `;
+
+                        el.onclick = () => getFile(file.id);
+
+                        episodeContainer.appendChild(el);
+                    });
+            };
+
+            Object.keys(grouped)
+                .sort((a, b) => Number(a) - Number(b))
+                .forEach((season, index) => {
+
+                    const btn = document.createElement('button');
+
+                    btn.className = 'season-btn';
+
+                    btn.textContent = `Season ${season}`;
+
+                    btn.onclick = () => renderSeason(season);
+
+                    seasonBar.appendChild(btn);
+
+                    if (index === 0) {
+                        renderSeason(season);
+                    }
+                });
+
+        } else {
+
+            data.files.forEach(file => {
+                const el = document.createElement('div');
+                el.className = 'file-item';
+
+                el.innerHTML = `
+                    <div class="file-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round">
+                            <polygon points="23 7 16 12 23 17 23 7"/>
+                            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                        </svg>
+                    </div>
+
+                    <div class="file-item-info">
+                        <div class="file-item-name">${file.name}</div>
+                        <div class="file-item-size">${file.size}</div>
+                    </div>
+
+                    <div class="file-item-get">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                            <path d="M5 12h14"/>
+                            <path d="M12 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                `;
+
+                el.onclick = () => getFile(file.id);
+
+                filesEl.appendChild(el);
+            });
+        }
     } catch(e) {
         filesEl.innerHTML = `<div class="modal-empty"><div class="modal-empty-icon">⚠️</div><div class="modal-empty-title">Error</div><div class="modal-empty-sub">Failed to load files.</div></div>`;
     }
