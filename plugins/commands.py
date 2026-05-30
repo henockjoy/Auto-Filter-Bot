@@ -2,6 +2,7 @@ import os
 import random
 import string
 import asyncio
+import logging
 from time import time as time_now
 from time import monotonic
 from Script import script
@@ -19,9 +20,16 @@ async def safe_send_cached_media(client, **kwargs):
     while True:
         try:
             return await client.send_cached_media(**kwargs)
+
         except FloodWait as e:
-            print(f"FloodWait detected. Sleeping for {e.value} seconds...")
+            logging.warning(
+                f"FloodWait detected. Sleeping for {e.value} seconds."
+            )
+
             await asyncio.sleep(e.value)
+
+        except Exception:
+            raise
 
 
 @Client.on_message(filters.command("start") & filters.incoming)
@@ -194,8 +202,11 @@ async def start(client, message):
                 protect_content=False,
                 reply_markup=InlineKeyboardMarkup(btn)
             )
-            file_ids.append(msg.id)
-            await asyncio.sleep(8)
+
+            if msg:
+                file_ids.append(msg.id)
+
+            await asyncio.sleep(2)
 
         time = get_readable_time(PM_FILE_DELETE_TIME)
         vp = await message.reply(f"Nᴏᴛᴇ: Tʜɪs ғɪʟᴇs ᴡɪʟʟ ʙᴇ ᴅᴇʟᴇᴛᴇ ɪɴ {time} ᴛᴏ ᴀᴠᴏɪᴅ ᴄᴏᴘʏʀɪɢʜᴛs. Sᴀᴠᴇ ᴛʜᴇ ғɪʟᴇs ᴛᴏ sᴏᴍᴇᴡʜᴇʀᴇ ᴇʟsᴇ")
@@ -250,17 +261,14 @@ async def start(client, message):
             InlineKeyboardButton('⁉️ ᴄʟᴏsᴇ ⁉️', callback_data='close_data')
         ]]
     await asyncio.sleep(1)
-    try:
-        vp = await client.send_cached_media(
-            chat_id=message.from_user.id,
-            file_id=file_id,
-            caption=f_caption,
-            protect_content=False,
-            reply_markup=InlineKeyboardMarkup(btn)
-        )
-    except FloodWait as e:
-        logger.error(f"FLOOD WAIT DETECTED: {e.value} seconds")
-        raise
+    vp = await safe_send_cached_media(
+        client,
+        chat_id=message.from_user.id,
+        file_id=file_id,
+        caption=f_caption,
+        protect_content=False,
+        reply_markup=InlineKeyboardMarkup(btn)
+    )
     time = get_readable_time(PM_FILE_DELETE_TIME)
     msg = await vp.reply(f"Nᴏᴛᴇ: Tʜɪs ᴍᴇssᴀɢᴇ ᴡɪʟʟ ʙᴇ ᴅᴇʟᴇᴛᴇ ɪɴ {time} ᴛᴏ ᴀᴠᴏɪᴅ ᴄᴏᴘʏʀɪɢʜᴛs. Sᴀᴠᴇ ᴛʜᴇ ғɪʟᴇ ᴛᴏ sᴏᴍᴇᴡʜᴇʀᴇ ᴇʟsᴇ")
     await asyncio.sleep(PM_FILE_DELETE_TIME)
