@@ -1075,7 +1075,7 @@ async function loadFilesForItem(item) {
                         episodes[ep] = [];
                     }
 
-                    episodes[ep].push(file);
+                    episodes[ep].push(file;
 
                 });
 
@@ -1089,34 +1089,73 @@ async function loadFilesForItem(item) {
 
                         el.innerHTML = `
                             <div class="file-icon">
-                                🎬
+                                <svg width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="white" stroke-width="2.2"
+                                    stroke-linecap="round">
+                                    <polygon points="23 7 16 12 23 17 23 7"/>
+                                    <rect x="1" y="5" width="15" height="14"
+                                        rx="2" ry="2"/>
+                                </svg>
                             </div>
 
                             <div class="file-item-info">
                                 <div class="file-item-name">
                                     Episode ${ep}
                                 </div>
-        
+
                                 <div class="file-item-size">
-                                    ${episodes[ep].length} Files
+                                ${episodes[ep].length} Files Available
                                 </div>
                             </div>
 
-                            <div class="file-item-get">
+                        <div class="file-item-get">
                                 →
                             </div>
                         `;
 
                         el.onclick = () => {
-                            showEpisodeFiles(
-                                episodes[ep]
-                            );
+                            episodeContainer.innerHTML = '';
+
+                            episodes[ep].forEach(file => {
+
+                                const fileEl = document.createElement('div');
+
+                                fileEl.className = 'file-item';
+
+                                fileEl.innerHTML = `
+                                    <div class="file-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24"
+                                            fill="none" stroke="white" stroke-width="2.2"
+                                            stroke-linecap="round">
+                                            <polygon points="23 7 16 12 23 17 23 7"/>
+                                            <rect x="1" y="5" width="15" height="14"
+                                            rx="2" ry="2"/>
+                                        </svg>
+                                    </div>
+
+                                    <div class="file-item-info">
+                                        <div class="file-item-name">
+                                            ${file.name}
+                                        </div>
+
+                                        <div class="file-item-size">
+                                            ${file.size || ''}
+                                        </div>
+                                        </div>
+
+                                    <div class="file-item-get">
+                                        →
+                                    </div>
+                                `;
+
+                                fileEl.onclick = () => getFile(file.id);
+
+                                episodeContainer.appendChild(fileEl);
+                            });
                         };
 
                         episodeContainer.appendChild(el);
-
                     });
-
             };
             function showEpisodeFiles(files) {
 
