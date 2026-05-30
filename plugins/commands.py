@@ -194,7 +194,6 @@ async def start(client, message):
                 protect_content=False,
                 reply_markup=InlineKeyboardMarkup(btn)
             )
-            )
             file_ids.append(msg.id)
             await asyncio.sleep(8)
 
