@@ -1065,9 +1065,23 @@ async function loadFilesForItem(item) {
 
                 episodeContainer.innerHTML = '';
 
-                grouped[seasonNo]
-                    .sort((a, b) => (a.episode || 0) - (b.episode || 0))
-                    .forEach(file => {
+                const episodes = {};
+
+                grouped[seasonNo].forEach(file => {
+
+                    const ep = file.episode || 1;
+
+                    if (!episodes[ep]) {
+                        episodes[ep] = [];
+                    }
+
+                    episodes[ep].push(file);
+
+                });
+
+                Object.keys(episodes)
+                    .sort((a, b) => Number(a) - Number(b))
+                    .forEach(ep => {
 
                         const el = document.createElement('div');
 
@@ -1075,34 +1089,100 @@ async function loadFilesForItem(item) {
 
                         el.innerHTML = `
                             <div class="file-icon">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round">
-                                    <polygon points="23 7 16 12 23 17 23 7"/>
-                                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
-                                </svg>
+                                🎬
                             </div>
 
                             <div class="file-item-info">
                                 <div class="file-item-name">
-                                    Episode ${file.episode || '?'}
+                                    Episode ${ep}
                                 </div>
+        
                                 <div class="file-item-size">
-                                    ${file.size}
+                                    ${episodes[ep].length} Files
                                 </div>
                             </div>
 
                             <div class="file-item-get">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-                                    <path d="M5 12h14"/>
-                                    <path d="M12 5l7 7-7 7"/>
-                                </svg>
+                                →
                             </div>
                         `;
 
-                        el.onclick = () => getFile(file.id);
+                        el.onclick = () => {
+                            showEpisodeFiles(
+                                episodes[ep]
+                            );
+                        };
 
                         episodeContainer.appendChild(el);
+
                     });
+
             };
+            function showEpisodeFiles(files) {
+
+                const episodeContainer =
+                    document.querySelector('.modal-files');
+
+                episodeContainer.innerHTML = '';
+
+                const languageSet = new Set();
+                const qualitySet = new Set();
+
+                files.forEach(file => {
+
+                    const caption = file.caption || '';
+
+                    caption.split(/\s+/).forEach(word => {
+
+                        if (/^\d{3,4}p$/i.test(word)) {
+                            qualitySet.add(word);
+                        }
+
+                    });
+
+                });
+
+                const filterBar = document.createElement('div');
+
+                filterBar.style.marginBottom = '15px';
+
+                filterBar.innerHTML = `
+                    <select id="languageFilter">
+                        <option>Language</option>
+                    </select>
+
+                    <select id="qualityFilter">
+                        <option>Quality</option>
+                    </select>
+                `;
+
+                episodeContainer.appendChild(filterBar);
+
+                files.forEach(file => {
+
+                    const card = document.createElement('div');
+
+                    card.className = 'file-item';
+
+                    card.innerHTML = `
+                        <div class="file-item-info">
+                            <div class="file-item-name">
+                                ${file.name}
+                            </div>
+
+                            <div class="file-item-size">
+                                ${file.size}
+                            </div>
+                        </div>
+                    `;
+
+                    card.onclick = () => getFile(file.id);
+
+                    episodeContainer.appendChild(card);
+
+                });
+
+            }
 
             Object.keys(grouped)
                 .sort((a, b) => Number(a) - Number(b))
