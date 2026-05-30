@@ -7,7 +7,7 @@ from info import ADMINS, INDEX_EXTENSIONS
 from database.ia_filterdb import save_file
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from utils import temp, get_readable_time
-
+import logging
 lock = asyncio.Lock()
 
 @Client.on_callback_query(filters.regex(r'^index'))
