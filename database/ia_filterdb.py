@@ -101,9 +101,9 @@ async def save_file(media):
         # NEW SEARCH FIELDS
         'normalized_name': parsed["normalized_name"],
         'season': parsed["season"],
-        'episode': parsed["episode"]
-        "languages": languages,
-        "qualities": qualities
+        'episode': parsed["episode"],
+        'languages': languages,
+        'qualities': qualities
     }
 
     
