@@ -1075,7 +1075,7 @@ async function loadFilesForItem(item) {
                         episodes[ep] = [];
                     }
 
-                    episodes[ep].push(file;
+                    episodes[ep].push(file);
 
                 });
 
