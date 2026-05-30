@@ -87,6 +87,10 @@ async def save_file(media):
     file_caption = re.sub(r"@\w+|(_|\-|\.|\+)", " ", str(media.caption))
     
     parsed = normalize_title(file_name)
+    caption_text = file_caption or file_name
+
+    languages = extract_languages(caption_text)
+    qualities = extract_qualities(caption_text)
 
     document = {
         '_id': file_id,
@@ -98,6 +102,8 @@ async def save_file(media):
         'normalized_name': parsed["normalized_name"],
         'season': parsed["season"],
         'episode': parsed["episode"]
+        "languages": languages,
+        "qualities": qualities
     }
 
     
@@ -160,7 +166,7 @@ async def get_search_results(query):
             file.get("normalized_name", "")
         )
 
-        if score >= 55:
+        if score >= 90:
             files.append(file)
 
     return files
