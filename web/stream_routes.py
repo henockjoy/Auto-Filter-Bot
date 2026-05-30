@@ -102,15 +102,19 @@ async def api_search_handler(request):
     files, next_offset, total_results = await handle_next_back(files, offset=offset, max_results=MAX_BTN)
     
     formatted_files = []
-    if files:
-        for file in files:
-            formatted_files.append({
-                "id": str(file['_id']),
-                "name": file.get('file_name', 'Unknown'),
-                "size": get_size(file.get('file_size', 0)),
-                "season": file.get('season'),
-                "episode": file.get('episode')
-            })
+
+    for file in files:
+
+        caption = file.get("caption") or ""
+
+        formatted_files.append({
+            "id": str(file['_id']),
+            "name": file.get('file_name', 'Unknown'),
+            "size": get_size(file.get('file_size', 0)),
+            "season": file.get('season'),
+            "episode": file.get('episode'),
+            "caption": caption
+        })
  
     return web.json_response({
         "files": formatted_files,
@@ -119,6 +123,48 @@ async def api_search_handler(request):
         "current_offset": offset,
         "max_btn": MAX_BTN,
         "bot_username": temp.U_NAME
+    })
+
+@routes.get("/api/episode-files")
+async def episode_files(request):
+
+    query = request.query.get("q", "")
+    season = int(request.query.get("season", 0))
+    episode = int(request.query.get("episode", 0))
+
+    files = await get_search_results(query)
+
+    filtered = []
+
+    languages = set()
+    qualities = set()
+
+    for file in files:
+
+        if file.get("season") != season:
+            continue
+
+        if file.get("episode") != episode:
+            continue
+
+        caption = file.get("caption") or ""
+
+        filtered.append(file)
+
+        words = caption.split()
+
+        for word in words:
+
+            if word.lower().endswith("p"):
+                qualities.add(word)
+
+            elif word[0].isupper():
+                languages.add(word)
+
+    return web.json_response({
+        "files": filtered,
+        "languages": sorted(list(languages)),
+        "qualities": sorted(list(qualities))
     })
 
 
