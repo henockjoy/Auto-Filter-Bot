@@ -105,7 +105,9 @@ async def api_search_handler(request):
             formatted_files.append({
                 "id": str(file['_id']),
                 "name": file.get('file_name', 'Unknown'),
-                "size": get_size(file.get('file_size', 0))
+                "size": get_size(file.get('file_size', 0)),
+                "season": file.get('season'),
+                "episode": file.get('episode')
             })
  
     return web.json_response({
