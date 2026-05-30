@@ -109,13 +109,12 @@ async def api_search_handler(request):
 
         formatted_files.append({
             "id": str(file['_id']),
-            "name": file.get('file_name', 'Unknown'),
-            "size": get_size(file.get('file_size', 0)),
+            "name": file.get('file_name'),
+            "size": get_size(file.get('file_size')),
             "season": file.get('season'),
             "episode": file.get('episode'),
-            "caption": caption
+            "caption": file.get('caption', '')
         })
- 
     return web.json_response({
         "files": formatted_files,
         "next_offset": next_offset if next_offset != 0 else None,
