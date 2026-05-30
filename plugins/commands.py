@@ -6,6 +6,7 @@ from time import time as time_now
 from time import monotonic
 from Script import script
 from pyrogram import Client, filters, enums
+from pyrogram.errors import FloodWait
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, LinkPreviewOptions, WebAppInfo
 from database.ia_filterdb import db_count_documents, get_file_details, delete_files
 from database.users_chats_db import db
@@ -13,6 +14,14 @@ from datetime import datetime, timedelta
 from info import PREMIUM_PLANS, EFFECT_IDS, OWNER_USERNAME, IS_PREMIUM, URL, BIN_CHANNEL, INDEX_CHANNELS, ADMINS, IS_VERIFY, VERIFY_TUTORIAL, VERIFY_EXPIRE, SHORTLINK_API, SHORTLINK_URL, DELETE_TIME, SUPPORT_LINK, UPDATES_LINK, LOG_CHANNEL, PICS, IS_STREAM, REACTIONS, PM_FILE_DELETE_TIME
 from utils import get_plan_name, get_poster, is_premium, upload_image, get_settings, get_size, is_subscribed, is_check_admin, get_shortlink, get_verify_status, update_verify_status, save_group_settings, temp, get_readable_time, get_wish, get_seconds
 import PTN
+
+async def safe_send_cached_media(client, **kwargs):
+    while True:
+        try:
+            return await client.send_cached_media(**kwargs)
+        except FloodWait as e:
+            print(f"FloodWait detected. Sleeping for {e.value} seconds...")
+            await asyncio.sleep(e.value)
 
 
 @Client.on_message(filters.command("start") & filters.incoming)
@@ -177,15 +186,17 @@ async def start(client, message):
                     InlineKeyboardButton('⁉️ ᴄʟᴏsᴇ ⁉️', callback_data='close_data')
                 ]]
 
-            msg = await client.send_cached_media(
+            msg = await safe_send_cached_media(
+                client,
                 chat_id=message.from_user.id,
                 file_id=file['_id'],
                 caption=f_caption,
                 protect_content=False,
                 reply_markup=InlineKeyboardMarkup(btn)
             )
+            )
             file_ids.append(msg.id)
-            await asyncio.sleep(2)
+            await asyncio.sleep(8)
 
         time = get_readable_time(PM_FILE_DELETE_TIME)
         vp = await message.reply(f"Nᴏᴛᴇ: Tʜɪs ғɪʟᴇs ᴡɪʟʟ ʙᴇ ᴅᴇʟᴇᴛᴇ ɪɴ {time} ᴛᴏ ᴀᴠᴏɪᴅ ᴄᴏᴘʏʀɪɢʜᴛs. Sᴀᴠᴇ ᴛʜᴇ ғɪʟᴇs ᴛᴏ sᴏᴍᴇᴡʜᴇʀᴇ ᴇʟsᴇ")
@@ -239,7 +250,9 @@ async def start(client, message):
         ],[
             InlineKeyboardButton('⁉️ ᴄʟᴏsᴇ ⁉️', callback_data='close_data')
         ]]
-    vp = await client.send_cached_media(
+    await asyncio.sleep(1)
+    vp = await safe_send_cached_media(
+        client,
         chat_id=message.from_user.id,
         file_id=file_id,
         caption=f_caption,
