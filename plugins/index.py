@@ -34,7 +34,8 @@ async def send_for_index(bot, message):
     msg = await bot.listen(chat_id=message.chat.id, user_id=message.from_user.id)
     if not msg:
         await i.delete()
-        return await message.reply('Timeout!')
+        logging.warning("Timeout while indexing")
+        return
     await i.delete()
     if msg.text and msg.text.startswith("https://t.me"):
         try:
@@ -90,7 +91,7 @@ async def index_files_to_db(lst_msg_id, chat, msg, bot, skip):
     unsupported = 0
     badfiles = 0
     current = skip
-    
+    last_update = 0
     async with lock:
         try:
             async for message in bot.iter_messages(chat, lst_msg_id, skip):
@@ -100,14 +101,32 @@ async def index_files_to_db(lst_msg_id, chat, msg, bot, skip):
                     await msg.edit(f"Successfully Cancelled!\nCompleted in {time_taken}\n\nSaved <code>{total_files}</code> files to Database!\nDuplicate Files Skipped: <code>{duplicate}</code>\nDeleted Messages Skipped: <code>{deleted}</code>\nNon-Media messages skipped: <code>{no_media + unsupported}</code>\nUnsupported Media: <code>{unsupported}</code>\nErrors Occurred: <code>{errors}</code>\nBad Files Ignoref: <code>{badfiles}</code>")
                     return
                 current += 1
-                if current % 30 == 0:
+                if time.time() - last_update > 30:
+
+                    last_update = time.time()
+
                     btn = [[
-                        InlineKeyboardButton('CANCEL', callback_data=f'index#cancel#{chat}#{lst_msg_id}#{skip}')
+                        InlineKeyboardButton(
+                            'CANCEL',
+                            callback_data=f'index#cancel#{chat}#{lst_msg_id}#{skip}'
+                        )
                     ]]
+
                     try:
-                        await msg.edit_text(text=f"Total messages received: <code>{current}</code>\nTotal messages saved: <code>{total_files}</code>\nDuplicate Files Skipped: <code>{duplicate}</code>\nDeleted Messages Skipped: <code>{deleted}</code>\nNon-Media messages skipped: <code>{no_media + unsupported}</code>\nUnsupported Media: <code>{unsupported}</code>\nErrors Occurred: <code>{errors}</code>\nBad Files Ignoref: <code>{badfiles}</code>", reply_markup=InlineKeyboardMarkup(btn))
-                    except FloodWait as e:
-                        await asyncio.sleep(e.value)
+                        await msg.edit_text(
+                            text=f"Total messages received: <code>{current}</code>\n"
+                                 f"Total messages saved: <code>{total_files}</code>\n"
+                                 f"Duplicate Files Skipped: <code>{duplicate}</code>\n"
+                                 f"Deleted Messages Skipped: <code>{deleted}</code>\n"
+                                 f"Non-Media messages skipped: <code>{no_media + unsupported}</code>\n"
+                                 f"Unsupported Media: <code>{unsupported}</code>\n"
+                                 f"Errors Occurred: <code>{errors}</code>\n"
+                                 f"Bad Files Ignored: <code>{badfiles}</code>",
+                            reply_markup=InlineKeyboardMarkup(btn)
+                        )
+
+                    except FloodWait:
+                        pass
                 if message.empty:
                     deleted += 1
                     continue
@@ -134,7 +153,7 @@ async def index_files_to_db(lst_msg_id, chat, msg, bot, skip):
                 elif sts == 'err':
                     errors += 1
         except Exception as e:
-            await msg.reply(f'Index canceled due to Error - {e}')
+            print(f"Index canceled due to Error - {e}")
         else:
             time_taken = get_readable_time(time.time()-start_time)
             await msg.edit(f'Succesfully saved <code>{total_files}</code> to Database!\nCompleted in {time_taken}\n\nDuplicate Files Skipped: <code>{duplicate}</code>\nDeleted Messages Skipped: <code>{deleted}</code>\nNon-Media messages skipped: <code>{no_media + unsupported}</code>\nUnsupported Media: <code>{unsupported}</code>\nErrors Occurred: <code>{errors}</code>\nBad Files Ignoref: <code>{badfiles}</code>')
